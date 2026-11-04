@@ -1,0 +1,670 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Curious to Connected</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Serif:ital,wght@1,500&family=Montserrat:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: a top-down swimless flowchart on a "wall" panel, time rail on the left, a Connected exit column on the right. NewSpring Design System tokens (light gray / dark gray colorways). */
+:root{
+  --page:#DDDDDD; --panel:#EAEAEA; --inset:#D2D2D2;
+  --ink:#2A4930; --ink-strong:#1A2E1E; --muted:#525C55; --head:#1C683E;
+  --guest:#6BAC43; --touch:#BC9B67; --note:#1C683E; --on-fill:#1A2E1E; --on-note:#F2F2F2;
+  --line:#2A4930; --hair:rgba(48,48,48,.18); --band:rgba(42,73,48,.14);
+  --conn:#2A4930; --conn-ink:#DDDDDD; --conn-head:#8BC466;
+  --chip:rgba(255,255,255,.62); --chip-ink:#1A2E1E;
+  --open-bg:#E3DCCF;
+  --font-head:"IBM Plex Serif",Cambria,Georgia,serif;
+  --font-body:"Montserrat","Proxima Nova",Calibri,system-ui,sans-serif;
+  --font-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --page:#303030; --panel:#3A3A3A; --inset:#282828;
+    --ink:#DDDDDD; --ink-strong:#F2F2F2; --muted:#AEB3AF; --head:#7AB854;
+    --line:#C9CEC9; --hair:rgba(221,221,221,.2); --band:rgba(221,221,221,.12);
+    --conn:#2A4930; --conn-ink:#DDDDDD; --conn-head:#8BC466;
+    --open-bg:#4A443A;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --page:#303030; --panel:#3A3A3A; --inset:#282828;
+  --ink:#DDDDDD; --ink-strong:#F2F2F2; --muted:#AEB3AF; --head:#7AB854;
+  --line:#C9CEC9; --hair:rgba(221,221,221,.2); --band:rgba(221,221,221,.12);
+  --conn:#2A4930; --conn-ink:#DDDDDD; --conn-head:#8BC466;
+  --open-bg:#4A443A;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--page);color:var(--ink);font-family:var(--font-body);font-size:15px;line-height:1.45;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:32px 56px}
+.wrap{max-width:1228px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
+.eyebrow{font-family:var(--font-mono);font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+h1{font-family:var(--font-head);font-style:italic;font-weight:500;font-size:clamp(36px,5vw,54px);line-height:1.05;letter-spacing:-.01em;color:var(--head);margin:6px 0 10px;text-wrap:balance}
+h2{font-family:var(--font-head);font-style:italic;font-weight:500;font-size:26px;line-height:1.15;color:var(--head);margin:0 0 12px;text-wrap:balance}
+.lead{font-size:17px;max-width:68ch;margin:0}
+.bl{max-width:72ch;margin:14px 0 0;padding:14px 16px;background:var(--panel);border:1px solid var(--hair);border-radius:2px}
+.bl b{font-weight:700;color:var(--ink-strong)}
+.meta{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:12px;font-size:13px;color:var(--muted)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.stat{padding:14px 16px;border-top:3px solid var(--head);background:var(--panel)}
+.stat .n{font-family:var(--font-head);font-style:italic;font-weight:500;font-size:34px;line-height:1;color:var(--head);font-variant-numeric:tabular-nums}
+.stat .t{font-size:13.5px;margin-top:6px}
+.stat .r{font-family:var(--font-mono);font-size:11px;color:var(--muted);margin-top:6px}
+
+.legend{display:flex;flex-wrap:wrap;gap:10px 22px;align-items:center;font-size:13px}
+.lg{display:flex;align-items:center;gap:8px}
+.sw{width:22px;height:16px;border-radius:2px;flex:none}
+.sw.guest{background:var(--guest)} .sw.touch{background:var(--touch)} .sw.note{background:var(--note)}
+.sw.sys{background:var(--panel);border:1.5px solid var(--line)}
+.sw.open{background:var(--open-bg);border:1.5px dashed var(--line)}
+.sw.dec{width:18px;height:18px;transform:rotate(45deg) scale(.8);background:var(--panel);border:1.5px solid var(--line)}
+.sw.conn{background:var(--conn)}
+.sw.chipsw{width:auto;height:auto;padding:1px 6px;font-family:var(--font-mono);font-size:10.5px;background:var(--inset);color:var(--ink)}
+.hint{font-size:13px;color:var(--muted);margin:0}
+
+.scroller{overflow-x:auto;-webkit-overflow-scrolling:touch;background:var(--panel);border:1px solid var(--hair);border-radius:2px}
+#chart{position:relative;width:1180px;margin:0 auto}
+#edges{position:absolute;inset:0;pointer-events:none;overflow:visible}
+#edges path{fill:none;stroke:var(--line);stroke-width:1.6}
+#edges path.dash{stroke-dasharray:5 4}
+#edges polygon{fill:var(--line)}
+#edges line.band{stroke:var(--band);stroke-width:1;stroke-dasharray:2 4}
+.rail{position:absolute;left:18px;width:168px}
+.rail .d{font-family:var(--font-mono);font-weight:500;font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--head)}
+.rail .l{font-size:12px;color:var(--muted);line-height:1.3;margin-top:2px}
+.elabel{position:absolute;font-family:var(--font-mono);font-size:10.5px;line-height:1;padding:3px 5px;background:var(--panel);color:var(--ink);border-radius:2px;white-space:nowrap;pointer-events:none}
+
+.node{position:absolute;display:block;text-align:left;font:inherit;color:var(--on-fill);border:0;border-radius:2px;padding:10px 12px 11px;cursor:pointer;
+  box-shadow:0 1px 2px rgba(42,73,48,.18);transition:transform 120ms cubic-bezier(.2,0,.2,1), box-shadow 120ms cubic-bezier(.2,0,.2,1)}
+.node:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(42,73,48,.22)}
+.node:focus-visible{outline:2px solid var(--head);outline-offset:3px}
+.node.sel{outline:2.5px solid var(--ink-strong);outline-offset:3px}
+.node span{display:block}
+.k-guest{background:var(--guest)}
+.k-touch{background:var(--touch)}
+.k-note{background:var(--note);color:var(--on-note)}
+.k-sys{background:var(--panel);color:var(--ink);border:1.5px solid var(--line);box-shadow:none}
+.k-open{background:var(--open-bg);color:var(--ink);border:1.5px dashed var(--line);box-shadow:none}
+.who{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;opacity:.82;margin-bottom:3px;padding-right:44px}
+.ttl{font-weight:700;font-size:14px;line-height:1.25}
+.sub{font-size:12.5px;line-height:1.38;margin-top:4px}
+.chips{display:flex!important;flex-wrap:wrap;gap:4px;margin-top:8px}
+.chip{display:inline-block!important;font-family:var(--font-mono);font-size:10.5px;line-height:1.3;padding:2px 6px;border-radius:2px;background:var(--chip);color:var(--chip-ink)}
+.chip b{font-weight:500;text-transform:uppercase;letter-spacing:.05em}
+.k-sys .chip,.k-open .chip{background:var(--inset);color:var(--ink)}
+.chip.hn{background:var(--note);color:var(--on-note)}
+.badge{position:absolute!important;top:8px;right:8px;font-family:var(--font-mono);font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;padding:2px 5px;border:1px dashed currentColor;border-radius:2px;opacity:.85}
+.k-dec{background:transparent;box-shadow:none;padding:0;color:var(--ink)}
+.k-dec:hover{box-shadow:none}
+.k-dec svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.k-dec polygon{fill:var(--panel);stroke:var(--line);stroke-width:1.6}
+.k-dec:hover polygon{fill:var(--inset)}
+.k-dec .dl{position:absolute;inset:0;display:flex!important;align-items:center;justify-content:center;text-align:center;padding:0 46px;font-weight:700;font-size:12.5px;line-height:1.25}
+.k-dec .badge{top:-4px;right:-4px;background:var(--panel)}
+
+.connected{position:absolute;background:var(--conn);color:var(--conn-ink);border-radius:2px;padding:16px 14px;display:flex;flex-direction:column;gap:14px;border:1.5px solid var(--conn-head)}
+.connected .ct{font-family:var(--font-head);font-style:italic;font-weight:500;font-size:26px;line-height:1;color:var(--conn-head)}
+.connected .cl{font-size:13px;font-weight:600;line-height:1.5}
+.connected .cn{font-size:12px;line-height:1.4;padding-top:12px;border-top:1px solid rgba(221,221,221,.25)}
+.connected .cn b{color:var(--conn-head);font-weight:700}
+
+.pop{position:absolute;z-index:5;width:360px;background:var(--page);color:var(--ink);border:1.5px solid var(--line);border-radius:2px;box-shadow:0 12px 32px rgba(42,73,48,.28);padding:16px 16px 14px;max-height:520px;overflow:auto}
+.pop .pk{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.pop .pt{font-family:var(--font-head);font-style:italic;font-weight:500;font-size:22px;line-height:1.15;color:var(--head);margin:4px 30px 10px 0}
+.pop .wall{font-family:var(--font-mono);font-size:11.5px;line-height:1.45;background:var(--panel);border-left:3px solid var(--touch);padding:8px 10px;margin-bottom:12px}
+.pop .wall .wl{display:block;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
+.pop ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:7px;font-size:13px}
+.pop .ref{font-family:var(--font-mono);font-size:10.5px;color:var(--muted);white-space:nowrap}
+.pop .op{margin-top:12px;padding:9px 10px;border:1.5px dashed var(--line);background:var(--open-bg);font-size:13px}
+.pop .op b{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;font-weight:500;display:block;margin-bottom:3px}
+.pop .x{position:absolute;top:10px;right:10px;width:30px;height:30px;border:1px solid var(--hair);background:var(--panel);color:var(--ink);border-radius:2px;font-size:18px;line-height:1;cursor:pointer}
+.pop .x:focus-visible{outline:2px solid var(--head);outline-offset:2px}
+@media (max-width:700px){
+  .pop{position:fixed;left:max(12px, env(safe-area-inset-left, 0px));right:max(12px, env(safe-area-inset-right, 0px));bottom:calc(12px + env(safe-area-inset-bottom, 0px));top:auto!important;width:auto;max-height:62vh}
+}
+
+.cols{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:28px;align-items:start}
+@media (max-width:900px){.cols{grid-template-columns:minmax(0,1fr)}}
+.tbl-wrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th{font-family:var(--font-mono);font-weight:500;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-align:left;padding:0 10px 8px 0;border-bottom:1.5px solid var(--line)}
+td{vertical-align:top;padding:10px 10px 10px 0;border-bottom:1px solid var(--hair)}
+td:first-child{font-weight:700;color:var(--ink-strong);width:24%}
+td .ref{font-family:var(--font-mono);font-size:10.5px;color:var(--muted);display:block;margin-top:3px}
+.team{display:flex;flex-direction:column;gap:16px}
+.team section{background:var(--panel);border:1px solid var(--hair);border-radius:2px;padding:12px 14px}
+.team h3{font-family:var(--font-mono);font-weight:500;font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--head);margin:0 0 6px}
+.team ul{margin:0;padding-left:18px;font-size:13.5px;display:flex;flex-direction:column;gap:4px}
+.next ol{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px;max-width:75ch}
+.next li b{color:var(--ink-strong)}
+.src{font-size:13px;color:var(--muted);max-width:90ch}
+.src ul{margin:6px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:3px}
+.src code{font-family:var(--font-mono);font-size:11.5px;color:var(--ink)}
+@media (prefers-reduced-motion: reduce){.node{transition:none}.node:hover{transform:none}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">One Church · Project 1 · New Here</div>
+    <h1>Curious to Connected</h1>
+    <p class="lead">How a first-time guest moves from saying hi on a Sunday to getting connected, as the team mapped it on Thursday, Oct. 29.</p>
+    <div class="bl"><b>Bottom line:</b> This is the sticky-note wall turned into one flow, with the decision points drawn in. It covers the Sunday New Here form path. Other ways in are parked for the next map, and 10 calls are still open (listed below the map).</div>
+    <div class="meta"><span>Rough draft for the Nov. 9 working session</span><span>Built only from three Oct. 29 recordings and the wall photo</span></div>
+  </header>
+
+  <div class="stats" aria-label="The win">
+    <div class="stat"><div class="n">30%</div><div class="t">Goal: guests who say hi who are connected within six months</div><div class="r">R2 · 01:37</div></div>
+    <div class="stat"><div class="n">19%</div><div class="t">Where we are: June–July first-time guests now connected (Made for Relationship)</div><div class="r">R2 · 03:08</div></div>
+    <div class="stat"><div class="n">~5×</div><div class="t">More activity from guests who got 3+ messages than from guests who got none</div><div class="r">R2 · 04:51</div></div>
+  </div>
+
+  <div style="display:flex;flex-direction:column;gap:12px">
+    <div class="legend" aria-label="Legend">
+      <span class="lg"><span class="sw guest"></span>Guest moment <span style="color:var(--muted)">(lime notes)</span></span>
+      <span class="lg"><span class="sw touch"></span>Touchpoint from us <span style="color:var(--muted)">(orange notes)</span></span>
+      <span class="lg"><span class="sw note"></span>Host notes</span>
+      <span class="lg"><span class="sw sys"></span>Rock</span>
+      <span class="lg"><span class="sw dec"></span>Decision</span>
+      <span class="lg"><span class="sw open"></span>Not decided</span>
+      <span class="lg"><span class="sw chipsw">COMM</span>Team ask <span style="color:var(--muted)">(yellow notes)</span></span>
+      <span class="lg"><span class="sw conn"></span>Connected (the exit)</span>
+    </div>
+    <p class="hint">Tap any step for the details, the wall note and the recording timestamp behind it.</p>
+    <div class="scroller"><div id="chart"><svg id="edges" aria-hidden="true"></svg></div></div>
+  </div>
+
+  <div class="cols">
+    <section>
+      <h2>Still open</h2>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>Call</th><th>What was on the table</th></tr></thead>
+        <tbody>
+          <tr><td>Donation details</td><td>Specific partners, or the three 4SC focus areas? How often a campus can change its four (yearly, quarterly, or when the CP asks). Pay out quarterly or twice a year. Treated as three projects: Comms, Tech, Campuses. Frank to say what's possible; Kelsey's team to say whether 13 campuses × 4 works.<span class="ref">R2 · 57:53 · R3 · 38:39–40:16</span></td></tr>
+          <tr><td>Who gets new requests</td><td>Assign each one to a default connector (like the GS director), or let it land unassigned for campus triage.<span class="ref">R3 · 11:42–14:53</span></td></tr>
+          <tr><td>Board statuses</td><td>Lane names shared with KidSpring and Fuse. A due date per status (say 7 days, resetting) instead of one overall limit like 21 days. Red should mean overdue. Dan to think through statuses before Nov. 9.<span class="ref">R3 · 60:06–71:22</span></td></tr>
+          <tr><td>Definition of done</td><td>Mark the card complete here, or transfer it to the membership board.<span class="ref">R3 · 64:00–68:14</span></td></tr>
+          <tr><td>Midweek starts</td><td>"By Thursday" assumes a Sunday start. Count from when they said hi instead.<span class="ref">R2 · 62:09–63:46</span></td></tr>
+          <tr><td>Automated or triggered</td><td>Campaign emails, push-button steps a person kicks off ("Send second email"), or a mix. Push-button is where it was leaning.<span class="ref">R2 · 65:28 · R3 · 62:52</span></td></tr>
+          <tr><td>When to stop</td><td>How many tries for gift no-shows and Meet &amp; Greet no-shows. Consent for mass messages vs. one-to-one texts.<span class="ref">R2 · 64:41, 78:44</span></td></tr>
+          <tr><td>Meet &amp; Greet details</td><td>Name. Time slot (between services or 10:00–10:30). How kiosk walk-ins get a card so notes aren't lost. Whether a walk-in still gets the gift.<span class="ref">R2 · 26:07 · R3 · 49:36–54:53</span></td></tr>
+          <tr><td>Opt-in wording</td><td>A standard disclaimer at the bottom, or a text/email toggle that's on by default.<span class="ref">R3 · 01:47</span></td></tr>
+          <tr><td>Other ways in</td><td>Groups, classes, next-step events, KidSpring, Fuse, the app, online and chat. Parked to keep today's map simple; the second map.<span class="ref">R2 · 53:13 · R3 · 05:33</span></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section>
+      <h2>Asks on the wall, by team</h2>
+      <div class="team">
+        <section><h3>Comms</h3><ul>
+          <li>CP email copy: short, relational, thanks for attending, we love our city too, donation acknowledgment, P.S. if you're ready to connect</li>
+          <li>Invite back for the gift: get notes from Dan</li>
+          <li>Standard email: look at current copy, from hello@, automated, week 2, sent even if they don't get the gift</li>
+          <li>Meet &amp; Greet invite: get notes from Dan</li>
+          <li>Meet &amp; Greet: name it, review Dan's script</li>
+        </ul></section>
+        <section><h3>Tech</h3><ul>
+          <li>A report to make 2nd-time gift tags</li>
+          <li>Volunteer access to the board: New Here and GS desk volunteers</li>
+          <li>Meet &amp; Greet (can be open attendance): attendance, check-in, name tags, a way to add notes</li>
+          <li>Meet &amp; Greet attendance: how? Standardize schedules?</li>
+        </ul></section>
+        <section><h3>Guest Services</h3><ul>
+          <li>Training for volunteers</li>
+          <li>A way to mark on the board that they got the gift</li>
+        </ul></section>
+        <section><h3>Donation projects</h3><ul>
+          <li>Comms, Tech and Campuses</li>
+        </ul></section>
+        <section><h3>New Here form</h3><ul>
+          <li>Campus (prefilled), first name, last name, email, phone</li>
+          <li>Remove the checkboxes and gender; no address</li>
+        </ul></section>
+      </div>
+    </section>
+  </div>
+
+  <section class="next">
+    <h2>What happens next</h2>
+    <ol>
+      <li><b>Next week (Nov. 2–6):</b> Tech is at Rock Conference. Comms said it has what it needs to start on copy. <span class="ref" style="font-family:var(--font-mono);font-size:10.5px;color:var(--muted)">R3 · 57:13</span></li>
+      <li><b>Before Nov. 9:</b> Turn this rough draft into a true process flow, with every place people come in and go out and every decision block. Craig was asked to pair up on it. <span style="font-family:var(--font-mono);font-size:10.5px;color:var(--muted)">R3 · 69:09</span></li>
+      <li><b>Dan:</b> send Comms his drafts for the gift invite, the Meet &amp; Greet invite and the Meet &amp; Greet script, and think through board statuses. <span style="font-family:var(--font-mono);font-size:10.5px;color:var(--muted)">R3 · 44:12, 49:17, 49:41, 60:06</span></li>
+      <li><b>Monday, Nov. 9, 1–3 PM:</b> two-hour working session to review progress. <span style="font-family:var(--font-mono);font-size:10.5px;color:var(--muted)">R3 · 71:22</span></li>
+    </ol>
+  </section>
+
+  <section class="src">
+    <h2>Sources</h2>
+    Nothing on this page comes from outside these four sources. Timestamps are minutes into each recording.
+    <ul>
+      <li><code>R1</code> One Church planning: New Here vision and gaps · 10:05 AM · 38 min</li>
+      <li><code>R2</code> Curious-to-connected funnel: Dan's proposal and the first sketch · 10:53 AM · 82 min</li>
+      <li><code>R3</code> Afternoon: New Here form, Rock connection boards, follow-up · 12:46 PM · 74 min</li>
+      <li><code>Wall</code> Photo of the sticky-note wall. Two blank yellow notes with arrows (top center, far right) had no writing, so they're left off.</li>
+    </ul>
+    <p style="margin:10px 0 0">Speaker names come from Plaud's summaries and from people addressing each other by name. Plaud labels most speakers by number, so check any attribution that matters.</p>
+  </section>
+</div>
+
+<div id="pop" class="pop" hidden role="dialog" aria-labelledby="popTitle"></div>
+
+<script>
+(function(){
+const W = 1180;
+const TX = {L:320, M:580, R:840};
+const NW = 224, DW = 200, DH = 112;
+const CONN_X = 994, CONN_W = 170;
+
+const ROWS = [
+  {d:"Sunday", l:"In the gathering", min:140},
+  {d:"", l:"Says hi", min:130},
+  {d:"", l:"After the shift", min:130},
+  {d:"Sun–Mon", l:"A few hours later", min:120},
+  {d:"Monday", l:"", min:146},
+  {d:"Tuesday", l:"By end of day", min:120},
+  {d:"Thursday", l:"By Thursday", min:120},
+  {d:"Sunday 2", l:"Next Sunday, or a later one", min:146},
+  {d:"", l:"", min:120},
+  {d:"Week 2", l:"", min:146},
+  {d:"Ongoing", l:"Until they come or ask us to stop", min:120},
+  {d:"Monthly", l:"Meet & Greet", min:146},
+  {d:"", l:"", min:130},
+  {d:"After", l:"After the Meet & Greet", min:110},
+  {d:"", l:"", min:146},
+  {d:"Close", l:"", min:110}
+];
+
+const N = [
+ {id:"host", row:0, t:"M", k:"guest", who:"Host on the platform", title:"Host moment",
+  sub:"Under 20 seconds, at the start of the gathering in the Guest, Good News, Giving moment. One ask: tap to say hi.",
+  wall:"Host Moment",
+  det:[["Happens at the start of the gathering, inside the Guest, Good News, Giving moment, so every host says it every week.","R2 · 8–25 min"],
+       ["Timed at under 20 seconds. The message: we don't want something from you, we want something for you. Say hi and we'll make a donation to a local partner you choose.","R2 · 8–25 min"],
+       ["One activation in the gathering: the tap. The GS desk still happens; it just isn't part of the ask.","R2 · 47:40–48:12"],
+       ["Earlier pilot, for context: Austin tried the ask at the end of a Greenville gathering and got 30 New Here taps and 14 finished forms.","R1 · 33:05"],
+       ["No extra time in the gathering to explain the donation choices. The form has to carry it.","R3 · 40:43"],
+       ["Lauren asked for an authentic script from the host moment all the way to the form.","R2 · 41:17"]]},
+ {id:"gs", row:0, t:"L", k:"guest", who:"Guest + host", title:"GS desk",
+  sub:"Hosts walk new guests in from their cars. Tap at the desk, or a paper card.",
+  wall:"GS Desk",
+  det:[["Hosts bring people from their cars to the New Here desk every week.","R2 · 75:46"],
+       ["There's a tap at the desk too, so it leads to the same form.","R2 · 48:27–49:12"],
+       ["The paper card stays for people without a phone or who aren't comfortable with the tap.","R3 · 18:20"],
+       ["The address for a postcard gets collected here, in person, not on the digital form.","R3 · 17:41, 30:22"],
+       ["Ashley: most GS areas are a kiosk and a bistro and don't stand out. Lauren: some campuses only have New Here at one entrance.","R2 · 35:59–37:43"]]},
+ {id:"other", row:0, span:2, t:"R", k:"open", who:"Not mapped yet", title:"Other ways in",
+  sub:"Groups, classes, next-step events, KidSpring, Fuse, the app, online and chat.",
+  det:[["Today's map stays on the Sunday New Here form. These get their own map.","R2 · 53:13–53:42"],
+       ["Downloading the app isn't the same as saying hi. Reaching those people needs permission.","R2 · 50:36–51:30"],
+       ["KidSpring families should land in the same funnel and get the 2nd-time gift even if they never fill out the form.","R2 · 34:37–35:33"],
+       ["Online and chat need a second version of the form with a campus picker.","R3 · 32:00–34:49"],
+       ["Rock option: New Here, KidSpring first-time and Fuse first-time stay separate boards of the same type, with shared statuses so each sees the others' activity.","R3 · 05:33–08:53"],
+       ["Whatever the way in, the goal is one road to the same place.","R2 · 54:07"]]},
+ {id:"form", row:1, t:"M", k:"guest", who:"Guest says hi", title:"Taps → New Here form",
+  sub:"Name, email and phone. Picks one of up to 4 local partners for a donation.",
+  chips:[["Donation","Comm · Tech · Campuses"]],
+  wall:"Tap (New Here Form) · *Campus (prefill) *First name *Last name *Email *Phone · remove check box, gender · Donation Projects: Comms, tech + campuses",
+  det:[["Required: first name, last name, email, phone.","R3 · 03:57, 15:55"],
+       ["Campus fills in from the 13 campus connect page links and stays hidden.","R3 · 32:23, 34:10"],
+       ["Cut: address, gender, and the first-time / returning / visiting checkboxes. No text-or-email preference; save that for membership.","R3 · 01:19, 29:01–35:15"],
+       ["Research: 4–5 fields is the sweet spot, 7 is the ceiling.","R3 · 28:00"],
+       ["Up to 4 local partners shown at once, each with a one-line description. No dropdown.","R2 · 57:32 · R3 · 35:42"],
+       ["Filling out this form is what 'saying hi' means.","R2 · 52:18"]],
+  open:"Partners or the three 4SC focus areas? How often can a campus change its four? Pay out quarterly or twice a year? Opt-in wording."},
+ {id:"notes", row:2, t:"L", k:"note", who:"GS desk + New Here volunteers", title:"Host adds notes to the card",
+  sub:"At the end of the shift, on the Rock connection board.",
+  chips:[["Tech","volunteer board access"]],
+  wall:"Tech: volunteer access to board? New Here vols, GS Desk vols",
+  det:[["After each shift, volunteers open the connection board on a laptop, find the guest's card and add what they learned (a child with special needs, family details).","R3 · 18:20–25:48"],
+       ["Access is limited to GS desk and New Here volunteers.","R3 · 46:03"],
+       ["Start with Rock's built-in board. Build something simpler only if it proves too clunky.","R3 · 25:21"]]},
+ {id:"req", row:2, t:"M", k:"sys", who:"Rock", title:"Connection request on the New Here board",
+  sub:"Created when the form comes in. The assigned connector gets an alert.",
+  det:[["The form creates a Rock profile if there isn't one, plus the connection request.","R3 · 21:14"],
+       ["Built on Rock's new connection boards. Nine staff are testing them now.","R3 · 10:09, 26:55"],
+       ["Due dates by status (say 7 days, resetting at each status) rather than one overall limit. Red should mean overdue.","R3 · 69:09–71:22"],
+       ["Every message and conversation goes in Rock notes, so two people don't send mixed signals.","R2 · 79:05"]],
+  open:"Default connector (like the GS director) or unassigned for campus triage?"},
+ {id:"cp", row:3, t:"M", k:"touch", who:"Automated · from the CP", title:"Campus pastor email",
+  sub:"A few hours after they say hi. Thanks them for the donation to the partner they picked.",
+  chips:[["Comm","copy"]],
+  wall:"timing: Sunday afternoon (crossed out) → ~ hours post · CP email greeting + thanking for donation (automated) · Short, relational, thank you for attending, we love our city too, donation acknowledgement, P.S. if you're ready to connect",
+  det:[["Should feel like a note, not a newsletter.","R3 · 41:43"],
+       ["Replies go straight to the CP, not to hello@.","R3 · 42:08"],
+       ["Names the partner they chose, like 'your donation went to Piedmont Pregnancy Center.'","R2 · 59:49 · R3 · 43:23"],
+       ["Not instant. Add a delay; if it would land late at night, send it the next morning.","R2 · 59:15–61:52"]]},
+ {id:"d1", row:4, t:"M", k:"dec", title:"Talked with a host at the GS desk?",
+  det:[["Only people who had a real conversation at the desk get a postcard. Everyone else skips it.","R2 · 60:28, 75:36"]]},
+ {id:"post", row:4, t:"L", k:"touch", who:"The host who met them", title:"Handwritten postcard",
+  sub:"Written Sunday, mailed Monday. Simple: loved meeting you, hope to see you again.",
+  wall:"timing: Mail on Monday · Postcard filled out by vol that hosted + mailed",
+  det:[["Written by the volunteer who hosted them, mailed Monday.","R2 · 75:29"],
+       ["Keep it simple and personal. No program invite, so it can't clash with the text that follows.","R2 · 79:28"]]},
+ {id:"pt", row:5, t:"M", k:"touch", who:"Staff or volunteer", title:"Personal text (or email)",
+  sub:"By end of day Tuesday. Sounds like a person, not a system.",
+  wall:"by EOD Tuesday · personal text (from staff or vol) or email to follow up",
+  det:[["Unpolished, like it came from your buddy at the gym.","R2 · 8–25 min"],
+       ["For 18–25s this is the touch that lands. They skim past the CP email and don't get mail at college.","R3 · 57:47"],
+       ["If they reply with a next step, connect them. They skip the rest of the funnel.","R2 · 8–25 min"]]},
+ {id:"inv", row:6, t:"M", k:"touch", who:"Personal text", title:"Invite back for the 2nd-time gift",
+  sub:"By Thursday. A gift with their name on it is waiting at the GS desk.",
+  chips:[["Comm","notes from Dan"],["Tech","gift-tag report"]],
+  wall:"by Thursday · invite to come back for second time gift · Comm: get notes from Dan · Tech: needs a report to make 2nd time gift tags",
+  det:[["A real person invites them back for a gift with their name on it.","R2 · 8–25 min"],
+       ["Dan has draft language for this invite.","R3 · 44:12"],
+       ["Tech runs a report of everyone in the process who hasn't picked up a gift, so bags get name labels ahead of time.","R3 · 45:23–46:29"]],
+  open:"'By Thursday' assumes a Sunday start. For someone who says hi midweek, count from when they said hi."},
+ {id:"d2", row:7, t:"M", k:"dec", title:"Comes back for the gift?",
+  wall:"2nd time gift · Ø 2nd time gift",
+  det:[["People attend about 1.4 times a month, so the next visit could be three Sundays out.","R2 · 32:55, 69:58"]]},
+ {id:"nogift", row:8, t:"L", k:"touch", who:"Same person, personal", title:"Keep following up",
+  sub:"One message can mention the gift and the Meet & Greet together.",
+  det:[["Keep reaching out until they come or ask us to stop.","R2 · 32:21"],
+       ["Guests who got 3+ messages were nearly 5× as likely to show activity as those who got none.","R2 · 04:51"],
+       ["One idea: after 3 or 4 tries, shift from the gift to the Meet & Greet invite.","R2 · 33:00"],
+       ["The unclaimed gift can come to the Meet & Greet with them.","R2 · 71:31–71:48"]],
+  open:"How many tries before we stop?"},
+ {id:"gift", row:8, t:"R", k:"guest", who:"Guest + GS desk host", title:"2nd-time gift conversation",
+  sub:"City mug, devotional, prayer for the city, note from the CP. The host listens for a next step.",
+  chips:[["GS","volunteer training"],["GS","mark the gift on the board"]],
+  wall:"2nd time gift · GS: (1) training for vols (2) a way to mark that they got the gift in the board",
+  det:[["A mug designed for their city ('[City] as in Heaven' with local landmarks), a devotional, a prayer for the city and a note from the campus pastors.","R2 · 8–25 min"],
+       ["The gift is a reason for a conversation. Staff weren't excited to hand out the current craft-journal gift.","R2 · 8–25 min"],
+       ["Research Dan shared: each good experience in a row adds about 20 points to the chance they stay (20%, 40%, 60%).","R2 · 8–25 min"],
+       ["Hosts mark the pickup on the board and add notes. Dan will build the training.","R3 · 45:16, 47:40"]]},
+ {id:"d3", row:9, t:"R", k:"dec", title:"Names a next step?",
+  det:[["If a group, class, serving or membership comes up, connect them right there. They don't have to finish the funnel.","R2 · 8–25 min"]]},
+ {id:"std", row:9, t:"M", k:"touch", who:"Automated · from hello@", title:"Standard NewSpring email",
+  sub:"Welcome and next steps. Goes out whether or not they picked up the gift.",
+  chips:[["Comm","review current copy"]],
+  wall:"Standard NS email welcome + next steps (from hello@) · Comm: look @ current copy, from hello · automated even if they don't get the gift · @ 2nd week",
+  det:[["This email exists today. Comms will review it in light of the new process.","R3 · 46:42–47:02"],
+       ["Moved to week 2 so the first week doesn't feel like too much.","R3 · 48:20 · R2 · 76:50"],
+       ["From hello@ on purpose: the church at large telling them clearly how to get connected.","R3 · 47:09, 48:53"],
+       ["Email matters because people search their inbox for it months later.","R2 · 78:15"]]},
+ {id:"mgi", row:10, t:"M", k:"touch", who:"A person, never automatic", title:"Personal invite to the Meet & Greet",
+  sub:"Everyone still in the funnel, gift or no gift. 'I'll be there and introduce you.'",
+  chips:[["Comm","notes from Dan"]],
+  wall:"personal invite to meet + greet (by Thursday, crossed out) · Comm: get notes from Dan",
+  det:[["Nothing triggers the next step automatically. The person working the card chooses to send it.","R3 · 52:43–53:24"],
+       ["They get invited whether or not they came back for the gift.","R2 · 70:18–70:41"],
+       ["Offer to meet them there, so nobody walks into small talk alone.","R2 · 34:19"],
+       ["No RSVP needed. What matters is knowing who came.","R2 · 80:46–81:31"]]},
+ {id:"d4", row:11, t:"M", k:"dec", title:"Comes to the Meet & Greet?",
+  wall:"Attend Meet + Greet · Ø Attend Meet + Greet"},
+ {id:"again", row:12, t:"L", k:"touch", who:"Personal", title:"Invite to Meet & Greet again",
+  sub:"For next month's event.",
+  wall:"invite to meet + greet again · ? how many times",
+  det:[["Same open question as the gift follow-up: how many times before we stop?","R2 · 72:00"]],
+  open:"How many times?"},
+ {id:"mg", row:12, t:"R", k:"guest", who:"Monthly · same week, every campus", title:"Meet & Greet",
+  sub:"Kiosk check-in and name tags. The CP tells a 4-minute life-change story, then staff and key volunteers talk with guests at high-tops.",
+  chips:[["Comm","name it + Dan's script"],["Tech","check-in, name tags, notes"]], hn:true,
+  wall:"Attend Meet + Greet · Host notes made · Comm: name of meet + greet, review Dan's script · Tech (can be open attendance): attendance, check-in, name tags, ability to add notes · Tech: attendance for Meet + Greet, how / standardize schedules?",
+  det:[["Campus pastors agreed on one monthly week across all campuses.","R3 · 51:12–51:31"],
+       ["15–20 minutes, maybe 30. Not 'membership light' and not a presentation.","R2 · 25:53–26:07"],
+       ["Open attendance: anyone can check in at a kiosk, even without a connection request.","R3 · 50:20–51:10"],
+       ["Hosts add notes to the card afterward.","R2 · 71:04"],
+       ["Michael pushed back on monthly: a missed month becomes two. Connect reached 69% of new believers, vs. 11% before it.","R2 · 29:12"]],
+  open:"Name. Time slot (between services or 10:00–10:30). How kiosk walk-ins get a card so notes aren't lost. Whether a walk-in still gets the gift."},
+ {id:"pt2", row:13, t:"R", k:"touch", who:"Staff, host or volunteer", title:"Personal text",
+  sub:"Follows up on what came up in the conversation.",
+  wall:"personal text from staff, host, vol",
+  det:[["Follow-up depends on the notes. If they want a group, class or serving spot, the normal follow-up for that step starts.","R2 · 73:31"]]},
+ {id:"d5", row:14, t:"R", k:"dec", title:"Connected?"},
+ {id:"fu", row:14, t:"M", k:"open", who:"Proposal", title:"Follow up",
+  sub:"Two follow-ups over the next two weeks. Offered as a starting point, not policy.",
+  det:[["Michael offered this structure to refine, not as final policy.","R2 · 73:57"]],
+  open:"When do we stop pursuing someone who doesn't re-engage?"},
+ {id:"close", row:15, t:"M", k:"open", who:"Not decided", title:"Close the card",
+  sub:"Mark it complete here, or transfer it to the membership board?",
+  det:[["Frank needs a definition of done before building the reporting.","R3 · 64:00–68:14"],
+       ["Transferring at the Meet & Greet saves the guest a step, but makes it harder to see what finished here.","R3 · 67:06–67:19"]]}
+];
+
+const E = [
+ ["gs","b","form","l","vh"],
+ ["gs","b","notes","t","v"],
+ ["host","b","form","t","v"],
+ ["other","b","req","r","vh",{dash:1,label:"Same road · map next",lx:-150,ly:18}],
+ ["form","b","req","t","v"],
+ ["notes","r","req","l","h",{dash:1}],
+ ["req","b","cp","t","v"],
+ ["cp","b","d1","t","v"],
+ ["d1","l","post","r","h",{label:"Yes"}],
+ ["d1","b","pt","t","v",{label:"No"}],
+ ["post","b","pt","l","vh"],
+ ["pt","b","inv","t","v"],
+ ["pt","r","CONN",null,"conn",{dash:1,label:"Replies with a next step"}],
+ ["inv","b","d2","t","v"],
+ ["d2","r","gift","t","hv",{label:"Yes"}],
+ ["d2","l","nogift","t","hv",{label:"No",lx:-34}],
+ ["d2","b","std","t","v",{label:"Either way"}],
+ ["gift","b","d3","t","v"],
+ ["d3","r","CONN",null,"conn",{label:"Yes"}],
+ ["d3","b","mgi","r","vh",{label:"No"}],
+ ["nogift","b","mgi","l","vh"],
+ ["std","b","mgi","t","v"],
+ ["mgi","b","d4","t","v"],
+ ["d4","r","mg","t","hv",{label:"Yes"}],
+ ["d4","b","again","r","vh",{label:"No"}],
+ ["again","t","d4","l","vh",{label:"Next month",lx:-84,ly:-26}],
+ ["mg","b","pt2","t","v"],
+ ["pt2","b","d5","t","v"],
+ ["d5","r","CONN",null,"conn",{label:"Yes"}],
+ ["d5","l","fu","r","h",{label:"No",lx:-34}],
+ ["fu","b","close","t","v"],
+ ["CONNB",null,"close","r","vh",{dash:1}]
+];
+
+const chart = document.getElementById("chart");
+const svg = document.getElementById("edges");
+const pop = document.getElementById("pop");
+const byId = {};
+const kindName = {guest:"Guest moment", touch:"Touchpoint from us", note:"Host notes", sys:"Rock", open:"Not decided", dec:"Decision"};
+
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]));}
+
+// Build nodes
+N.forEach(n=>{
+  const b = document.createElement("button");
+  b.type="button";
+  b.className="node k-"+n.k;
+  b.dataset.id=n.id;
+  const hasDetail = n.det || n.open || n.wall;
+  if(n.k==="dec"){
+    b.style.width=DW+"px"; b.style.height=DH+"px";
+    b.innerHTML='<svg viewBox="0 0 '+DW+' '+DH+'" preserveAspectRatio="none" aria-hidden="true"><polygon points="'+(DW/2)+',1 '+(DW-1)+','+(DH/2)+' '+(DW/2)+','+(DH-1)+' 1,'+(DH/2)+'"/></svg><span class="dl">'+esc(n.title)+'</span>';
+  } else {
+    b.style.width=NW+"px";
+    let h='';
+    if(n.open) h+='<span class="badge">Open</span>';
+    h+='<span class="who">'+esc(n.who||"")+'</span><span class="ttl">'+esc(n.title)+'</span>';
+    if(n.sub) h+='<span class="sub">'+esc(n.sub)+'</span>';
+    if((n.chips&&n.chips.length)||n.hn){
+      h+='<span class="chips">';
+      if(n.hn) h+='<span class="chip hn">Host notes made</span>';
+      (n.chips||[]).forEach(c=>{h+='<span class="chip"><b>'+esc(c[0])+'</b> '+esc(c[1])+'</span>';});
+      h+='</span>';
+    }
+    b.innerHTML=h;
+  }
+  b.setAttribute("aria-label", n.title + (hasDetail?" — show details":""));
+  if(!hasDetail){ b.disabled=true; b.style.cursor="default"; }
+  b.addEventListener("click", e=>{ e.stopPropagation(); openPop(n, b); });
+  chart.appendChild(b);
+  n.el=b; byId[n.id]=n;
+});
+
+// Connected column
+const conn = document.createElement("div");
+conn.className="connected";
+conn.innerHTML='<div class="ct">Connected</div>'+
+ '<div class="cl">Group · Class · Serving · Membership · Baptism · KidSpring check-in again</div>'+
+ '<div class="cn"><b>When they\'re ready, we\'re ready.</b> Funnel, not factory: anyone can jump here from any step.</div>'+
+ '<div class="cn"><b>Membership invites</b> are personal, never blanket. Based on the notes on the card and time, like a family checking kids in every week for a year.</div>'+
+ '<div class="cn"><b>The win:</b> 30% of guests who say hi, connected within six months.</div>';
+chart.appendChild(conn);
+
+// Rail labels
+const rails = ROWS.map(r=>{
+  if(!r.d && !r.l) return null;
+  const el=document.createElement("div"); el.className="rail";
+  el.innerHTML=(r.d?'<div class="d">'+esc(r.d)+'</div>':'')+(r.l?'<div class="l">'+esc(r.l)+'</div>':'');
+  chart.appendChild(el); return el;
+});
+
+const labels=[];
+function layout(){
+  // measure
+  N.forEach(n=>{ n.w=n.el.offsetWidth; n.h=n.el.offsetHeight; });
+  const rowH = ROWS.map((r,i)=>{
+    let m=r.min;
+    N.forEach(n=>{ if(n.row===i && !n.span) m=Math.max(m, n.h+46); });
+    return m;
+  });
+  const top0=28; const rowTop=[]; let y=top0;
+  rowH.forEach((h,i)=>{ rowTop[i]=y; y+=h; });
+  const H=y+28;
+  chart.style.height=H+"px";
+  svg.setAttribute("width",W); svg.setAttribute("height",H); svg.setAttribute("viewBox","0 0 "+W+" "+H);
+
+  N.forEach(n=>{
+    const cx=TX[n.t];
+    let ny;
+    if(n.span){ const sTop=rowTop[n.row], sH=rowH.slice(n.row,n.row+n.span).reduce((a,b)=>a+b,0); ny=sTop+(sH-n.h)/2 - 10; }
+    else ny=rowTop[n.row]+(rowH[n.row]-n.h)/2;
+    n.x=Math.round(cx-n.w/2); n.y=Math.round(ny);
+    n.el.style.left=n.x+"px"; n.el.style.top=n.y+"px";
+  });
+  ROWS.forEach((r,i)=>{ if(rails[i]) rails[i].style.top=(rowTop[i]+14)+"px"; });
+
+  const cTop=rowTop[5]+10, cBot=rowTop[14]+rowH[14]-10;
+  conn.style.left=CONN_X+"px"; conn.style.width=CONN_W+"px"; conn.style.top=cTop+"px"; conn.style.height=(cBot-cTop)+"px";
+
+  // edges
+  let out="";
+  ROWS.forEach((r,i)=>{ if(i>0 && r.d){ out+='<line class="band" x1="12" x2="'+(W-12)+'" y1="'+rowTop[i]+'" y2="'+rowTop[i]+'"/>'; }});
+  labels.forEach(l=>l.remove()); labels.length=0;
+
+  function port(n,s){
+    if(s==="t") return [n.x+n.w/2, n.y];
+    if(s==="b") return [n.x+n.w/2, n.y+n.h];
+    if(s==="l") return [n.x, n.y+n.h/2];
+    return [n.x+n.w, n.y+n.h/2];
+  }
+  function rounded(pts){
+    const r=7; let d="M"+pts[0][0]+" "+pts[0][1];
+    for(let i=1;i<pts.length;i++){
+      const p=pts[i];
+      if(i<pts.length-1){
+        const a=pts[i-1], c=pts[i+1];
+        const l1=Math.hypot(p[0]-a[0],p[1]-a[1]), l2=Math.hypot(c[0]-p[0],c[1]-p[1]);
+        const rr=Math.min(r,l1/2,l2/2);
+        const p1=[p[0]-(p[0]-a[0])/l1*rr, p[1]-(p[1]-a[1])/l1*rr];
+        const p2=[p[0]+(c[0]-p[0])/l2*rr, p[1]+(c[1]-p[1])/l2*rr];
+        d+=" L"+p1[0]+" "+p1[1]+" Q"+p[0]+" "+p[1]+" "+p2[0]+" "+p2[1];
+      } else d+=" L"+p[0]+" "+p[1];
+    }
+    return d;
+  }
+  function arrow(a,b){
+    const ang=Math.atan2(b[1]-a[1],b[0]-a[0]); const L=9, Wd=4.5;
+    const p1=[b[0]-L*Math.cos(ang)+Wd*Math.sin(ang), b[1]-L*Math.sin(ang)-Wd*Math.cos(ang)];
+    const p2=[b[0]-L*Math.cos(ang)-Wd*Math.sin(ang), b[1]-L*Math.sin(ang)+Wd*Math.cos(ang)];
+    return '<polygon points="'+b[0]+','+b[1]+' '+p1[0]+','+p1[1]+' '+p2[0]+','+p2[1]+'"/>';
+  }
+  E.forEach(e=>{
+    const [f,fs,t,ts,mode,o={}]=e;
+    let a,b,pts;
+    if(f==="CONNB"){ a=[CONN_X+CONN_W/2, cBot]; b=port(byId[t],ts); pts=[a,[a[0],b[1]],b]; }
+    else {
+      a=port(byId[f],fs);
+      if(t==="CONN"){ b=[CONN_X, a[1]]; pts=[a,b]; }
+      else {
+        b=port(byId[t],ts);
+        if(mode==="v"){ if(Math.abs(a[0]-b[0])<1) pts=[a,b]; else { const my=(a[1]+b[1])/2; pts=[a,[a[0],my],[b[0],my],b]; } }
+        else if(mode==="hv") pts=[a,[b[0],a[1]],b];
+        else if(mode==="vh") pts=[a,[a[0],b[1]],b];
+        else if(mode==="h"){ if(Math.abs(a[1]-b[1])<1) pts=[a,b]; else { const mx=(a[0]+b[0])/2; pts=[a,[mx,a[1]],[mx,b[1]],b]; } }
+      }
+    }
+    // stop short for arrowhead
+    const last=pts[pts.length-1], prev=pts[pts.length-2];
+    const len=Math.hypot(last[0]-prev[0],last[1]-prev[1]);
+    const end=[last[0]-(last[0]-prev[0])/len*1.5, last[1]-(last[1]-prev[1])/len*1.5];
+    const drawn=pts.slice(0,-1).concat([end]);
+    out+='<path class="'+(o.dash?"dash":"")+'" d="'+rounded(drawn)+'"/>'+arrow(prev,end);
+    if(o.label){
+      const lb=document.createElement("span"); lb.className="elabel"; lb.textContent=o.label;
+      const s=pts[0], s2=pts[1];
+      let lx, ly;
+      if(Math.abs(s2[1]-s[1])<1){ const dir=Math.sign(s2[0]-s[0]); lx= dir>0 ? s[0]+10 : s[0]-10; ly=s[1]-20; lb.style.transform= dir>0?"":"translateX(-100%)"; }
+      else { lx=s[0]+8; ly=s[1]+ (s2[1]>s[1]?8:-24); }
+      if(o.lx!=null) { lx=s[0]+o.lx; lb.style.transform=""; }
+      if(o.ly!=null) ly=s[1]+o.ly;
+      lb.style.left=lx+"px"; lb.style.top=ly+"px";
+      chart.appendChild(lb); labels.push(lb);
+    }
+  });
+  svg.innerHTML=out;
+  if(current) placePop(current.n, current.el);
+}
+
+let current=null;
+function openPop(n, el){
+  N.forEach(m=>m.el.classList.remove("sel"));
+  el.classList.add("sel");
+  current={n,el};
+  let h='<button class="x" type="button" aria-label="Close">×</button>';
+  h+='<div class="pk">'+esc(kindName[n.k]||"")+(n.who?' · '+esc(n.who):'')+'</div>';
+  h+='<div class="pt" id="popTitle">'+esc(n.title)+'</div>';
+  if(n.wall) h+='<div class="wall"><span class="wl">On the wall</span>'+esc(n.wall)+'</div>';
+  if(n.det&&n.det.length){
+    h+='<ul>'+n.det.map(d=>'<li>'+esc(d[0])+' <span class="ref">'+esc(d[1])+'</span></li>').join('')+'</ul>';
+  }
+  if(n.open) h+='<div class="op"><b>Still open</b>'+esc(n.open)+'</div>';
+  pop.innerHTML=h;
+  pop.hidden=false;
+  if(pop.parentNode!==chart && window.innerWidth>700) chart.appendChild(pop);
+  if(window.innerWidth<=700 && pop.parentNode!==document.body) document.body.appendChild(pop);
+  placePop(n, el);
+  pop.querySelector(".x").addEventListener("click", closePop);
+  pop.querySelector(".x").focus({preventScroll:true});
+}
+function placePop(n, el){
+  if(window.innerWidth<=700){ pop.style.left=""; pop.style.top=""; return; }
+  const pw=360;
+  let left = n.x+n.w+16;
+  if(left+pw > W-8) left = n.x-pw-16;
+  if(left<8) left=8;
+  let top = n.y-6;
+  const ch = chart.offsetHeight;
+  pop.style.left=left+"px"; pop.style.top=Math.max(8, Math.min(top, ch-pop.offsetHeight-8))+"px";
+}
+function closePop(){
+  pop.hidden=true;
+  if(current){ current.el.classList.remove("sel"); const el=current.el; current=null; el.focus({preventScroll:true}); }
+}
+document.addEventListener("keydown", e=>{ if(e.key==="Escape" && !pop.hidden) closePop(); });
+document.addEventListener("click", e=>{ if(!pop.hidden && !pop.contains(e.target) && !e.target.closest(".node")) closePop(); });
+pop.addEventListener("click", e=>e.stopPropagation());
+
+layout();
+if(document.fonts && document.fonts.ready) document.fonts.ready.then(layout);
+let rt; window.addEventListener("resize", ()=>{ clearTimeout(rt); rt=setTimeout(layout,120); });
+})();
+</script>
+</body>
+</html>
