@@ -198,7 +198,7 @@ td .ref{font-family:var(--font-mono);font-size:10.5px;color:var(--muted);display
           <tr><td>When to stop</td><td>How many tries for gift no-shows and Meet &amp; Greet no-shows. Consent for mass messages vs. one-to-one texts.<span class="ref">R2 · 64:41, 78:44</span></td></tr>
           <tr><td>Meet &amp; Greet details</td><td>Name. Time slot (between services or 10:00–10:30). How kiosk walk-ins get a card so notes aren't lost. Whether a walk-in still gets the gift. How to ping staff outside Guest Services who need to follow up.<span class="ref">R2 · 26:07 · R3 · 49:36–54:53</span></td></tr>
           <tr><td>Opt-in wording</td><td>A standard disclaimer at the bottom, or a text/email toggle that's on by default.<span class="ref">R3 · 01:47</span></td></tr>
-          <tr><td>Other ways in</td><td>Groups, classes, next-step events, KidSpring, Fuse, the app, online and chat. Parked to keep today's map simple; the second map.<span class="ref">R2 · 53:13 · R3 · 05:33</span></td></tr>
+          <tr><td>Other ways in</td><td>Groups, classes, next-step events, Fuse, the app, online and chat. Parked to keep today's map simple; the second map.<span class="ref">R2 · 53:13 · R3 · 05:33</span></td></tr>
         </tbody>
       </table></div>
     </section>
@@ -262,7 +262,7 @@ td .ref{font-family:var(--font-mono);font-size:10.5px;color:var(--muted);display
 <script>
 (function(){
 const W = 1180;
-const TX = {L:320, M:580, R:840};
+const TX = {L:320, M:580, R:840, X:1080};
 const NW = 224, DW = 200, DH = 112;
 const CONN_X = 994, CONN_W = 170;
 
@@ -308,11 +308,17 @@ const N = [
   det:[["Added Nov. 5 as the third way a guest says hi, alongside the host moment and the GS desk.","Craig · Nov. 5"],
        ["Open attendance: anyone can check in at a kiosk, even without a connection request.","R3 · 50:20–51:10"]],
   open:"A kiosk check-in creates a Rock profile but not a card. How walk-ins get onto the New Here board is still open (see the Meet & Greet step below)."},
- {id:"other", row:2, t:"R", k:"open", who:"Not mapped yet", title:"Other ways in",
-  sub:"Groups, classes, next-step events, KidSpring, Fuse, the app, online and chat.",
+ {id:"ks", row:0, t:"X", nw:186, k:"guest", who:"Parent · KidSpring", title:"KS First Time Form",
+  sub:"Families fill it out in KidSpring. They don't need the New Here form too.",
+  det:[["Added Nov. 5 as a way into the process.","Craig · Nov. 5"],
+       ["KidSpring families should land in the same funnel and get the 2nd-time gift even if they never fill out the New Here form.","R2 · 34:37–35:33"],
+       ["Rock option: New Here and KidSpring first-time stay separate boards of the same type, with shared statuses so each team sees the other's activity.","R3 · 05:33–08:53"],
+       ["Watch for doubles: a family that fills out both forms shouldn't get two sets of messages.","R3 · 07:04"]],
+  open:"Does a KidSpring family get a card on the New Here board, or a KidSpring card that Guest Services can see? How do we avoid duplicates when a family fills out both forms?"},
+ {id:"other", row:3, t:"R", k:"open", who:"Not mapped yet", title:"Other ways in",
+  sub:"Groups, classes, next-step events, Fuse, the app, online and chat.",
   det:[["Today's map stays on the Sunday New Here form. These get their own map.","R2 · 53:13–53:42"],
        ["Downloading the app isn't the same as saying hi. Reaching those people needs permission.","R2 · 50:36–51:30"],
-       ["KidSpring families should land in the same funnel and get the 2nd-time gift even if they never fill out the form.","R2 · 34:37–35:33"],
        ["Online and chat need a second version of the form with a campus picker.","R3 · 32:00–34:49"],
        ["Rock option: New Here, KidSpring first-time and Fuse first-time stay separate boards of the same type, with shared statuses so each sees the others' activity.","R3 · 05:33–08:53"],
        ["Whatever the way in, the goal is one road to the same place.","R2 · 54:07"]]},
@@ -443,7 +449,8 @@ const E = [
  ["gs","b","notes","t","v"],
  ["host","b","form","t","v"],
  ["mgentry","b","form","r","vh"],
- ["other","l","req","r","h",{dash:1}],
+ ["ks","b","req","r","vh",{bdy:-10}],
+ ["other","t","req","r","vh",{dash:1,bdy:10}],
  ["form","b","req","t","v"],
  ["notes","r","req","l","h",{dash:1}],
  ["req","b","cp","t","v"],
@@ -493,7 +500,7 @@ N.forEach(n=>{
     b.style.width=DW+"px"; b.style.height=DH+"px";
     b.innerHTML='<svg viewBox="0 0 '+DW+' '+DH+'" preserveAspectRatio="none" aria-hidden="true"><polygon points="'+(DW/2)+',1 '+(DW-1)+','+(DH/2)+' '+(DW/2)+','+(DH-1)+' 1,'+(DH/2)+'"/></svg><span class="dl">'+esc(n.title)+'</span>';
   } else {
-    b.style.width=NW+"px";
+    b.style.width=(n.nw||NW)+"px";
     let h='';
     if(n.open) h+='<span class="badge">Open</span>';
     h+='<span class="who">'+esc(n.who||"")+'</span><span class="ttl">'+esc(n.title)+'</span>';
@@ -596,10 +603,10 @@ function layout(){
     let a,b,pts;
     if(f==="CONNB"){ a=[CONN_X+CONN_W/2, cBot]; b=port(byId[t],ts); pts=[a,[a[0],b[1]],b]; }
     else {
-      a=port(byId[f],fs);
+      a=port(byId[f],fs); if(o.ady) a=[a[0],a[1]+o.ady];
       if(t==="CONN"){ b=[CONN_X, a[1]]; pts=[a,b]; }
       else {
-        b=port(byId[t],ts);
+        b=port(byId[t],ts); if(o.bdy) b=[b[0],b[1]+o.bdy];
         if(mode==="v"){ if(Math.abs(a[0]-b[0])<1) pts=[a,b]; else { const my=(a[1]+b[1])/2; pts=[a,[a[0],my],[b[0],my],b]; } }
         else if(mode==="hv") pts=[a,[b[0],a[1]],b];
         else if(mode==="vh") pts=[a,[a[0],b[1]],b];
